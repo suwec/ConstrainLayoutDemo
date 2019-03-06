@@ -12,38 +12,38 @@ import com.bumptech.glide.Glide
 import java.util.*
 
 class RecyleAdapter(private val context: Context, private var spanCount: Int, private val spanSize: Int) : RecyclerView.Adapter<RecyleAdapter.MyViewHolder>() {
-    private val imgList = ArrayList<Int>()
+    private val imgList = ArrayList<Int>() //图片地址列表
 
     private//        float density = dm.density;
     //        int height = dm.heightPixels;
-    val screenWidth: Int
+    val screenWidth: Int //屏幕宽度
         get() {
             val resources = context.resources
             val dm = resources.displayMetrics
             return dm.widthPixels
         }
 
-    init {
+    init { //初始化图片，重复加载多次显示更多图片
         for (i in 0..5)
             initData(context)
     }
 
-    fun setSpanCount(spanCount: Int) {
+    fun setSpanCount(spanCount: Int) { //设置列数
         this.spanCount = spanCount
     }
 
     private fun initData(context: Context) {
-        for (i in 1..19) {
+        for (i in 1..19) { //加载图片资源地址
             imgList.add(context.resources.getIdentifier("pic$i", "drawable", context.packageName))
         }
     }
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): MyViewHolder {
+    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): MyViewHolder { //初始化Item布局
         val inflate = LayoutInflater.from(context).inflate(R.layout.activity_main, viewGroup, false)
         return MyViewHolder(inflate)
     }
 
-    fun getImageWidthHeight(resId: Int): Float {
+    fun getImageWidthHeight(resId: Int): Float { //初始化图片宽高
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
         val bitmap = BitmapFactory.decodeResource(context.resources, resId, options) // 此时返回的bitmap为null
@@ -59,10 +59,10 @@ class RecyleAdapter(private val context: Context, private var spanCount: Int, pr
         val imageWidthHeight = getImageWidthHeight(resourceId)
         imageLayoutParams.height = (imageLayoutParams.width * imageWidthHeight).toInt()//获取最终图片高度
         viewHolder.imageView.layoutParams = imageLayoutParams//应用高度到布局中
-        Glide.with(context).load(resourceId).into(viewHolder.imageView)
+        Glide.with(context).load(resourceId).into(viewHolder.imageView) //使用Glide加载图片
         viewHolder.constraintLayout.setOnClickListener(object : View.OnClickListener {
             private var isDelete = true
-            override fun onClick(v: View) {
+            override fun onClick(v: View) { //点击图片删除当前点击的图片
                 if (isDelete) {
                     isDelete = false
                     imgList.removeAt(i)
